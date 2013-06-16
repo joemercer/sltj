@@ -27,6 +27,8 @@ var okCancelEvents = function (selector, callbacks) {
   return events;
 };
 
+
+
 // // Database of songs
 // Songs = new Meteor.Collection("songs");
 
@@ -108,7 +110,11 @@ if (Meteor.isClient) {
         $.getJSON( composeLastFMTrackSearch(text), function(data) {
           
           console.log('search', data.results.trackmatches.track);
-          // Session.set('results', data.results.trackmatches.track);
+
+          // !!! JACK This is the variable that has data for the autocomplete.
+          // Access it using Session.get('results');
+          // NOTE: It only updates when the user presses enter (for sanity purposes). We can change that later.
+          Session.set('results', data.results.trackmatches.track);
 
           var seed = data.results.trackmatches.track[0];
 
