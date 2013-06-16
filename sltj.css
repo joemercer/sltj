@@ -1,0 +1,19 @@
+/* CSS declarations go here */
+
+input#search{
+	width: 200px;
+}
+
+.youtubeContainer-active
+{
+  position: relative;
+  padding-bottom: 56.25%;
+}
+.youtubeContainer-active iframe
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}

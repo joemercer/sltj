@@ -1,0 +1,31 @@
+<head>
+  <title>Sweet Like The JAM</title>
+</head>
+
+<body>
+	<div class="youtubeContainer">
+		<div id="youtubePlayer"></div>
+	</div>
+
+  {{> search}}  <button id="play">Play</button>
+
+  {{> songs}}
+</body>
+
+<template name="search">
+	<input type="text" id="search" placeholder="What do you want to listen to?">
+</template>
+
+<template name="song">
+	<li>{{name}} by {{artist}} ({{youtubeId}})</li>
+</template>
+
+<template name="songs">
+	<div>
+		<ol>
+			{{#each songs}}
+				{{> song}}
+			{{/each}}
+		</ol>
+	</div>
+</template>
