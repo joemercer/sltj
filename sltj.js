@@ -84,8 +84,7 @@ if (Meteor.isClient) {
 
       // Player in state 'stopped'
       if (e.data === 0) {
-        // !!! THIS DOESNT WORK
-        player.loadVideoById(stream[1].youtubeId);
+        _next();
       }
     }
 
@@ -93,7 +92,13 @@ if (Meteor.isClient) {
 
   // ------End Youtube Functionality Definition-------
 
+  var _next = function() {
+    console.log('next');
+  }
 
+
+
+  // Initialize some starting data.
 
   // This will store the results of a search.
   Session.set('results', [{name: "I'm Yours", artist: "Jason Mraz"}]);
@@ -102,7 +107,7 @@ if (Meteor.isClient) {
   Session.set('stream', [{name: "I'm Yours", artist: "Jason Mraz"}]);
 
   // Attach events to keydown, keyup, and blur on "New list" input box.
-  Template.search.events(okCancelEvents('input#search',
+  Template.controls.events(okCancelEvents('#search',
     {
       ok: function (text, e) {
 
@@ -135,7 +140,10 @@ if (Meteor.isClient) {
             });
 
             $(stream).each(function(index, elt){
-              $.getJSON( composeYoutubeVideoSearch(elt.name, elt.artist.name), function(gData) {
+
+              console.log('json url', elt.name, elt.artist, composeYoutubeVideoSearch(elt.name, elt.artist.name));
+
+              $.getJSON( composeYoutubeVideoSearch(elt.name, elt.artist), function(gData) {
                 elt.youtubeId = gData.feed.entry[0].media$group.yt$videoid.$t;
 
                 // Re-render the stream after getting each youtubeId (probly not necessary).
@@ -152,6 +160,22 @@ if (Meteor.isClient) {
               else {
                 player.loadVideoById(stream[0].youtubeId);
               }
+
+              var playIndex = 0;
+              _next = function() {
+                if (!player) {
+                  return;
+                }
+                playIndex++;
+                player.loadVideoById(stream[playIndex].youtubeId);
+              }
+
+              // Handle some skipping action.
+              $('#controls').append('<button id="skip" tabindex="3">Skip</button>');
+              $('#skip').click( function(e) {
+                _next();
+              });
+
             });
 
             // Re-render stream.

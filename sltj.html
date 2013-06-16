@@ -7,13 +7,16 @@
 		<div id="youtubePlayer"></div>
 	</div>
 
-  {{> search}}  <button id="play">Play</button>
+  {{> controls}}
 
   {{> songs}}
 </body>
 
-<template name="search">
-	<input type="text" id="search" placeholder="What do you want to listen to?">
+<template name="controls">
+	<input type="text" tabindex="1" id="search" placeholder="What do you want to listen to?">
+	<span id="controls">
+  	<button id="play" tabindex="2">Play</button>
+  </span>
 </template>
 
 <template name="song">
