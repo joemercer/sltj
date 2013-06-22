@@ -3,20 +3,22 @@
 </head>
 
 <body>
+	{{> header}}
+
 	<div class="youtubeContainer">
 		<div id="youtubePlayer"></div>
 	</div>
 
-  {{> controls}}
-
   {{> songs}}
 </body>
 
-<template name="controls">
-	<input type="text" tabindex="1" id="search" placeholder="What do you want to listen to?">
-	<span id="controls">
-  	<button id="play" tabindex="2">Play</button>
-  </span>
+<template name="header">
+	<div id="header">
+		<input type="text" tabindex="1" id="search" placeholder="What do you want to listen to?">
+		<span id="controls">
+	  	<button id="play" tabindex="2">Play</button>
+	  </span>
+	</div>
 </template>
 
 <template name="song">

@@ -107,7 +107,7 @@ if (Meteor.isClient) {
   Session.set('stream', [{name: "I'm Yours", artist: "Jason Mraz"}]);
 
   // Attach events to keydown, keyup, and blur on "New list" input box.
-  Template.controls.events(okCancelEvents('#search',
+  Template.header.events(okCancelEvents('#search',
     {
       ok: function (text, e) {
 
