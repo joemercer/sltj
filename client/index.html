@@ -9,28 +9,5 @@
 		<div id="youtubePlayer"></div>
 	</div>
 
-  {{> songs}}
+  {{> stream}}
 </body>
-
-<template name="header">
-	<div id="header">
-		<input type="text" tabindex="1" id="search" placeholder="What do you want to listen to?">
-		<span id="controls">
-	  	<button id="play" tabindex="2">Play</button>
-	  </span>
-	</div>
-</template>
-
-<template name="song">
-	<li>{{name}} by {{artist}} ({{youtubeId}})</li>
-</template>
-
-<template name="songs">
-	<div>
-		<ol>
-			{{#each songs}}
-				{{> song}}
-			{{/each}}
-		</ol>
-	</div>
-</template>

@@ -92,110 +92,178 @@ if (Meteor.isClient) {
 
   // ------End Youtube Functionality Definition-------
 
-  var _next = function() {
-    console.log('next');
-  }
+  // var _next = function() {
+  //   console.log('next');
+  // }
+
+
+
+  // initialize a stream model.
+  var stream = new Stream();
+
+  // stream.push({query: "Sleepyhead Passion Pit"});
+
+  //stream.push({query: "electric feel mgmt"});
+
+  Meteor.startup(function(){
+
+    // initialize a header view
+    var headerView = new HeaderView({
+      el: '#header',
+      stream: stream
+    });
+
+    // initialize a stream view
+    var streamView = new StreamView({
+      el: '#stream',
+      model: stream
+    });
+
+  });
+
+
+
+  // // initialize a stream view
+  // var streamView = new StreamView({
+  //   el: '#stream',
+  //   model: stream
+  // });
+
+  // // initialize a song model.
+  // var song = new Song({
+  //   name: "I'm Yours",
+  //   artist: "Jason Mraz"
+  // });
+  // // add the song to the stream.
+  // stream.push(song);
+
+  // var song2 = new Song({
+  //   name: "I'm Yours2",
+  //   artist: "Jason Mraz2"
+  // });
+  // stream.push(song2)
+
+
+
+
+
+
+
+
+  // var lotsOfSongs = [];
+  // stream.queue(lotsOfSongs);
+
+  // go to the next song.
+  // stream.next();
+
+  // I want to be able to say
+
+  // stream.push('i'm yours by jason mraz');
+
+  // stream.push('the shit by yodaddy')
+
+
 
 
 
   // Initialize some starting data.
 
   // This will store the results of a search.
-  Session.set('results', [{name: "I'm Yours", artist: "Jason Mraz"}]);
+  // Session.set('results', [{name: "I'm Yours", artist: "Jason Mraz"}]);
 
-  // This will store the stream.
-  Session.set('stream', [{name: "I'm Yours", artist: "Jason Mraz"}]);
+  // // This will store the stream.
+  // Session.set('stream', [{name: "I'm Yours", artist: "Jason Mraz"}]);
 
-  // Attach events to keydown, keyup, and blur on "New list" input box.
-  Template.header.events(okCancelEvents('#search',
-    {
-      ok: function (text, e) {
+  // // Attach events to keydown, keyup, and blur on "New list" input box.
+  // Template.header.events(okCancelEvents('#search',
+  //   {
+  //     ok: function (text, e) {
 
-        // Search based on text
-        $.getJSON( composeLastFMTrackSearch(text), function(data) {
+  //       // Search based on text
+  //       $.getJSON( composeLastFMTrackSearch(text), function(data) {
           
-          console.log('search', data.results.trackmatches.track);
+  //         console.log('search', data.results.trackmatches.track);
 
-          // !!! JACK This is the variable that has data for the autocomplete.
-          // Access it using Session.get('results');
-          // NOTE: It only updates when the user presses enter (for sanity purposes). We can change that later.
-          Session.set('results', data.results.trackmatches.track);
+  //         // !!! JACK This is the variable that has data for the autocomplete.
+  //         // Access it using Session.get('results');
+  //         // NOTE: It only updates when the user presses enter (for sanity purposes). We can change that later.
+  //         Session.set('results', data.results.trackmatches.track);
 
-          var seed = data.results.trackmatches.track[0];
+  //         var seed = data.results.trackmatches.track[0];
 
-          // Create stream.
-          $.getJSON( composeLastFMTrackGetSimilar(seed.name, seed.artist, 29), function(data) {
-            console.log('stream', data.similartracks.track);
+  //         // Create stream.
+  //         $.getJSON( composeLastFMTrackGetSimilar(seed.name, seed.artist, 29), function(data) {
+  //           console.log('stream', data.similartracks.track);
 
-            // First song is seed song.
-            var stream = [seed];
+  //           // // First song is seed song.
+  //           // var stream = [seed];
 
-            // Next songs from LastFM
-            $(data.similartracks.track).each(function(index, elt){
+  //           // Next songs from LastFM
+  //           $(data.similartracks.track).each(function(index, elt){
 
-              stream.push({
-                name : elt.name,
-                artist : elt.artist.name
-              });
-            });
+  //             // stream.push({
+  //             //   name : elt.name,
+  //             //   artist : elt.artist.name
+  //             // });
+  //           });
 
-            $(stream).each(function(index, elt){
+  //           $(stream).each(function(index, elt){
 
-              console.log('json url', elt.name, elt.artist, composeYoutubeVideoSearch(elt.name, elt.artist.name));
+  //             console.log('json url', elt.name, elt.artist, composeYoutubeVideoSearch(elt.name, elt.artist.name));
 
-              $.getJSON( composeYoutubeVideoSearch(elt.name, elt.artist), function(gData) {
-                elt.youtubeId = gData.feed.entry[0].media$group.yt$videoid.$t;
+  //             $.getJSON( composeYoutubeVideoSearch(elt.name, elt.artist), function(gData) {
+  //               elt.youtubeId = gData.feed.entry[0].media$group.yt$videoid.$t;
 
-                // Re-render the stream after getting each youtubeId (probly not necessary).
-                Session.set('stream', stream);
-              });
-            });
+  //               // Re-render the stream after getting each youtubeId (probly not necessary).
+  //               // Session.set('stream', stream);
+  //             });
+  //           });
 
-            // Assign a click to the play button.
-            $('#play').click( function(e) {
-              if (!player) {
-                MyYoutubeObject.load(container, stream[0].youtubeId);
-                $('.youtubeContainer').addClass('youtubeContainer-active');
-              }
-              else {
-                player.loadVideoById(stream[0].youtubeId);
-              }
+  //           // Assign a click to the play button.
+  //           $('#play').click( function(e) {
+  //             if (!player) {
+  //               MyYoutubeObject.load(container, stream[0].youtubeId);
+  //               $('.youtubeContainer').addClass('youtubeContainer-active');
+  //             }
+  //             else {
+  //               player.loadVideoById(stream[0].youtubeId);
+  //             }
 
-              var playIndex = 0;
-              _next = function() {
-                if (!player) {
-                  return;
-                }
-                playIndex++;
-                player.loadVideoById(stream[playIndex].youtubeId);
-              }
+  //             var playIndex = 0;
+  //             _next = function() {
+  //               if (!player) {
+  //                 return;
+  //               }
+  //               playIndex++;
+  //               player.loadVideoById(stream[playIndex].youtubeId);
+  //             }
 
-              // Handle some skipping action.
-              $('#controls').append('<button id="skip" tabindex="3">Skip</button>');
-              $('#skip').click( function(e) {
-                _next();
-              });
+  //             // Handle some skipping action.
+  //             $('#controls').append('<button id="skip" tabindex="3">Skip</button>');
+  //             $('#skip').click( function(e) {
+  //               _next();
+  //             });
 
-            });
+  //           });
 
-            // Re-render stream.
-            Session.set('stream', stream);
-          });
+  //           // Re-render stream.
+  //           // Session.set('stream', stream);
+  //         });
 
-        });
+  //       });
 
-        e.target.value = '';
-      },
-      cancel: function (e) {
-        console.log('cancel');
-      }
-    }));
+  //       e.target.value = '';
+  //     },
+  //     cancel: function (e) {
+  //       console.log('cancel');
+  //     }
+  //   }));
 
 
-  Template.songs.songs = function () {
-    // return Songs.find( {} );
-    return Session.get('stream');
-  };
+  // Template.stream.songs = function () {
+  //   // return Songs.find( {} );
+  //   return Session.get('stream');
+  // };
 
 }
 
@@ -212,36 +280,36 @@ if (Meteor.isServer) {
 // LastFM
 var composeLastFMTrackSearch = function(searchTerm) {
   var query ='';
-    var base = 'http://ws.audioscrobbler.com/2.0/?method=track.search';
-    var apiKey = '7a1e356a7279fca06252bc4e5cebccb2';
+  var base = 'http://ws.audioscrobbler.com/2.0/?method=track.search';
+  var apiKey = '7a1e356a7279fca06252bc4e5cebccb2';
 
-    query = query + base;
-    query = query + '&track=';
-    query = query + searchTerm;
-    query = query + '&api_key=';
-    query = query + apiKey;
-    query = query + '&format=json';
+  query = query + base;
+  query = query + '&track=';
+  query = query + searchTerm;
+  query = query + '&api_key=';
+  query = query + apiKey;
+  query = query + '&format=json';
 
-    return query;
+  return query;
 };
 
 var composeLastFMTrackGetSimilar = function(title, artist, limit) {
   var query ='';
-    var base = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar';
-    var apiKey = '7a1e356a7279fca06252bc4e5cebccb2';
+  var base = 'http://ws.audioscrobbler.com/2.0/?method=track.getsimilar';
+  var apiKey = '7a1e356a7279fca06252bc4e5cebccb2';
 
-    query = query + base;
-    query = query + '&artist=';
-    query = query + artist;
-    query = query + '&track=';
-    query = query + title;
-    query = query + '&limit=';
-    query = query + limit;
-    query = query + '&api_key=';
-    query = query + apiKey;
-    query = query + '&format=json';
+  query = query + base;
+  query = query + '&artist=';
+  query = query + artist;
+  query = query + '&track=';
+  query = query + title;
+  query = query + '&limit=';
+  query = query + limit;
+  query = query + '&api_key=';
+  query = query + apiKey;
+  query = query + '&format=json';
 
-    return query;
+  return query;
 };
 
 // Youtube
