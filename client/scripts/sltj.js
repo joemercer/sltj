@@ -107,17 +107,22 @@ if (Meteor.isClient) {
 
   Meteor.startup(function(){
 
-    // initialize a header view
+    // Initialize a header view.
     var headerView = new HeaderView({
       el: '#header',
       stream: stream
     });
 
-    // initialize a stream view
+    // Initialize a stream view.
     var streamView = new StreamView({
       el: '#stream',
       model: stream
     });
+
+    // // Initialize a youtubeView.
+    // var player = new YoutubeView({
+
+    // });
 
   });
 

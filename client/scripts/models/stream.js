@@ -1,9 +1,16 @@
-Stream = Backbone.Collection.extend({
-	model: Song,
+Stream = Backbone.Model.extend({
 
 	initialize: function(){
 		var self = this;
 		this.lastFM = API.LastFM;
+
+		// Here are some properties we'll need access to.
+		this.songs = new Songs([]);
+		// ??? Why can't I pass this in as an option?
+		this.songs.stream = self;
+
+		this.nowPlaying = 1;
+		this.fixed = 10;
 
 		// ??? Not sure why this has to be here.
 		// It seems like it can't go in the Meteor.startup block.
@@ -11,8 +18,9 @@ Stream = Backbone.Collection.extend({
 	  	return Session.get('stream');
 	  };
 
-		this.on('add', this.render);
-		this.on('change', this.render);
+	  // Here are some events to listen for.
+		this.songs.on('add', this.render);
+		this.songs.on('change', this.render);
 	},
 
 	render: function(model, collection, options){
@@ -20,6 +28,8 @@ Stream = Backbone.Collection.extend({
 		Session.set('stream', this.toJSON() );
 	},
 
+	// !!! rewrite.
+	// This should just be stream.push('searchTerm');
 	push: function(model, options){
 		var self = this;
 
@@ -38,11 +48,14 @@ Stream = Backbone.Collection.extend({
 				var query2 = self.lastFM.track.getSimilar(match.name, match.artist, 24);
 				$.getJSON(query2, function(data2){
 
-					self.push(match);
+					self.songs.push({
+						name: match.name,
+						artist: match.artist
+					});
 
 					var similar = data2.similartracks.track;
 					$.each(similar, function(index, track){
-						self.push({
+						self.songs.push({
 							name: track.name,
 							artist: track.artist.name
 						});
@@ -52,10 +65,7 @@ Stream = Backbone.Collection.extend({
 
 			});
 		}
-		else{
-			// Call regular push to add songs to stream.
-			Backbone.Collection.prototype.push.apply(this, arguments);
-		}
+
 	}
 
 });

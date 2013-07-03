@@ -4,6 +4,20 @@ input#query{
 	width: 200px;
 }
 
+.fixed{
+	color: green;
+}
+.variable{
+	color: red;
+}
+.nowPlaying{
+	color: blue;
+}
+
+#testYoutube{
+	display: none;
+}
+
 .youtubeContainer-active
 {
   position: relative;
@@ -17,3 +31,4 @@ input#query{
   width: 100%;
   height: 100%;
 }
+
