@@ -14,21 +14,31 @@ input#query{
 	color: blue;
 }
 
-#testYoutube{
-	display: none;
-}
-
 .youtubeContainer-active
 {
   position: relative;
   padding-bottom: 56.25%;
 }
-.youtubeContainer-active iframe
+
+.youtubeContainer-active #player
+{
+	position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+
+
+/*.youtubeContainer-active iframe
 {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-}
+}*/
 

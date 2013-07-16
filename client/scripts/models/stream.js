@@ -8,9 +8,13 @@ Stream = Backbone.Model.extend({
 		this.songs = new Songs([]);
 		// ??? Why can't I pass this in as an option?
 		this.songs.stream = self;
+		this.songs.youTube = API.YouTube;
 
-		this.nowPlaying = 1;
+		this.nowPlaying = 0;
 		this.fixed = 10;
+
+		// playing, paused, stopped, closed
+		this.playStatus = 'closed';
 
 		// ??? Not sure why this has to be here.
 		// It seems like it can't go in the Meteor.startup block.
@@ -24,8 +28,11 @@ Stream = Backbone.Model.extend({
 	},
 
 	render: function(model, collection, options){
+		var self = this;
+
 		// Session.set('stream', collection.toJSON() );
-		Session.set('stream', this.toJSON() );
+		console.log('render', self.toJSON());
+		Session.set('stream', self.toJSON() );
 	},
 
 	// !!! rewrite.
@@ -66,6 +73,135 @@ Stream = Backbone.Model.extend({
 			});
 		}
 
+	},
+
+	_initYoutube: function(){
+		var self = this;
+
+		if (!this.player){
+			// Create player
+			window.onYouTubePlayerReady = function(playerId){
+				if (playerId == 'player'){
+					self.player = document.getElementById('player');
+
+					self.player.addEventListener('onStateChange', 'YouTube.onStateChange');
+
+					self.playStatus = 'stopped';
+
+					self.play();
+
+					// // Play first video.
+					// console.log('first song');
+					// var startId = self.songs.at(self.nowPlaying).get('youtubeId');
+
+					// self.play(startId);
+
+					// // self.play('BH0KyPYi7EI');
+				}
+			};
+			window.YouTube = {
+				onStateChange: function(e){
+					console.log('state change', e);
+
+					// -1 => unstarted
+					// 0 => ended
+					// 1 => playing
+					// 2=> paused
+					// 3 => buffering
+					// 5 => video cued
+
+					// Stopped
+					if (e === 0){
+						self.playStatus = 'stopped';
+						self.play();
+					}
+					// Paused
+					else if (e === 2){
+
+					}
+
+
+
+				}
+			};
+
+			$.getScript('http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js', function(script){
+				console.log('swfobject1', swfobject);
+
+				// 425 and 356 are overriden.
+				var params = { allowScriptAccess: "always" };
+		    var atts = { id: "player" };
+		    swfobject.embedSWF("http://www.youtube.com/apiplayer?enablejsapi=1&playerapiid=player&version=3",
+		                       "youtubePlayer", "425", "356", "8", null, null, params, atts);
+
+			});
+
+			// How about some reactive awesomeness.
+			$('#youtubeContainer').addClass('youtubeContainer-active');
+
+		}
+
+	},
+
+	play: function(){
+		console.log('stream play');
+		var self = this;
+
+		if (!this.player){
+			this._initYoutube();
+			return;
+		}
+
+
+		if (self.playStatus == 'stopped'){
+			var currentId = self.songs.at(self.nowPlaying).get('youtubeId');
+			if (currentId){
+				self.player.loadVideoById(currentId);
+				self.nowPlaying++;
+				self.playStatus = 'playing';
+			}
+
+		}
+		else if (self.playStatus == 'paused'){
+			self.player.playVideo();
+			self.playStatus = 'playing';
+		}
+		else if (self.playStatus == 'playing'){
+			self.player.pauseVideo();
+			self.playStatus = 'paused';
+		}
+
+	},
+	pause: function(){
+		console.log('pause');
+		this.player.pauseVideo();
+		this.playStatus = 'paused';
+	},
+	skip: function(){
+		console.log('skip');
+		var self = this;
+
+		if (self.playStatus == 'stopped'){
+
+		}
+		else if (self.playStatus == 'paused'){
+			var currentId = self.songs.at(self.nowPlaying).get('youtubeId');
+			if (currentId){
+				self.player.loadVideoById(currentId);
+				self.player.pauseVideo();
+				self.playStatus = 'paused';
+			}
+		}
+		else if (self.playStatus == 'playing'){
+			var currentId = self.songs.at(self.nowPlaying).get('youtubeId');
+			if (currentId){
+				self.player.loadVideoById(currentId);
+				self.playStatus = 'playing';
+			}
+
+		}
+
+		self.nowPlaying++;
 	}
 
 });

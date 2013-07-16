@@ -5,6 +5,7 @@ Songs = Backbone.Collection.extend({
 	},
 
 	push: function(song, options){
+		var self = this;
 
 		var fixed = this.length < this.stream.fixed;
 		if (fixed){
@@ -18,6 +19,14 @@ Songs = Backbone.Collection.extend({
 		if (nowPlaying){
 			song.nowPlaying = 'nowPlaying';
 		}
+
+		// $.getJSON( this.youTube.search(song.name, song.artist), function(data) {
+		// 	song.youtubeId = data.feed.entry[0].media$group.yt$videoid.$t;
+
+		// 	self.stream.render();
+
+		// 	// Backbone.Collection.prototype.push.apply(this, arguments);
+		// });
 
 
 		Backbone.Collection.prototype.push.apply(this, arguments);

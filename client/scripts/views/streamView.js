@@ -3,5 +3,8 @@ StreamView = Backbone.View.extend({
 		// Template.stream.songs = function () {
 	 //  	return Session.get('stream');
 	 //  };
+
+
 	}
+
 });
