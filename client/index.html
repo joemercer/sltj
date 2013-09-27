@@ -1,14 +1,42 @@
 <head>
-  <title>Sweet Like The JAM</title>
+  <title>Sweet Like the JAM</title>
 </head>
 
 <body>
 	{{> header}}
 
+	{{#constant}}
 	<div id="youtubeContainer">
 		<div id="youtubePlayer"></div>
 	</div>
+	{{/constant}}
 
   {{> stream}}
 
 </body>
+
+<template name="header">
+	<div id="header">
+		<input type="text" tabindex="1" id="query" placeholder="What do you want to listen to?">
+		<span id="controls">
+			<button id="search" tabindex="2">Search</button>
+	  	<button id="play" tabindex="2">Play</button>
+	  	<button id="pause" tabindex="2">Pause</button>
+	  	<button id="skip" tabindex="2">Skip</button>
+	  </span>
+	</div>
+</template>
+
+<template name="song">
+	<li id="q_{{index}}" class="{{state}} {{nowPlaying}}">{{name}} by {{artist}} ({{youtubeId}})</li>
+</template>
+
+<template name="stream">
+	<div id="stream">
+		<ol>
+			{{#each songs}}
+				{{> song}}
+			{{/each}}
+		</ol>
+	</div>
+</template>
